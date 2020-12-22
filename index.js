@@ -64,11 +64,11 @@ const argv = yargs.command('nuevo', 'Comando para agregar un nuevo estudiante',{
         alias: 'l'
     }
 },(args) =>{
-
-    db.query(
-        'UPDATE students set name=$1, course=$3, level=$4 where rut =$2  RETURNING *',
-        [args.nombre, args.rut, args.curso, args.nivel],
-        (err, result) => {
+    const queryEdit ={
+        text: 'UPDATE students set name=$1, course=$3, level=$4 where rut =$2  RETURNING *',
+        values: [args.nombre, args.rut, args.curso, args.nivel],
+    }
+        db.query(queryEdit, (err, result) => {
             if(err)  console.log(err)
             console.log(result.rows[0]);
             db.pool.end()
@@ -83,7 +83,7 @@ const argv = yargs.command('nuevo', 'Comando para agregar un nuevo estudiante',{
 
 }, (args)=>{     
     db.query('SELECT * FROM students where rut=$1', [args.rut] , (err, result)=>{ 
-        if(err)  console.log(err)
+        if(err) console.log(err)
         console.log(result.rows[0]);
         db.pool.end()
     })
